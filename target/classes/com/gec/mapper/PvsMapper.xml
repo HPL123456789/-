@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gec.mapper.PvsMapper">
+  <resultMap id="BaseResultMap" type="com.gec.pojo.Pvs">
+    <result column="daystr" jdbcType="VARCHAR" property="daystr" />
+    <result column="pvs" jdbcType="BIGINT" property="pvs" />
+  </resultMap>
+  <resultMap id="BaseResultFlowMap" type="com.gec.pojo.Flow">
+    <result column="daystr" jdbcType="VARCHAR" property="daystr" />
+    <result column="uvs" jdbcType="VARCHAR" property="uvs" />
+    <result column="new_uvs" jdbcType="VARCHAR" property="new_uvs" />
+  </resultMap>
+  <resultMap id="BaseResultIpMap" type="com.gec.pojo.Ip">
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="vis_num" jdbcType="BIGINT" property="vis_num" />
+  </resultMap>
+  <resultMap id="BaseResultAvgPvsMap" type="com.gec.pojo.AvgPvs">
+    <result column="daystr" jdbcType="VARCHAR" property="daystr" />
+    <result column="avg_pvs" jdbcType="DOUBLE" property="avgPvs" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    daystr, pvs
+  </sql>
+  <sql id="Base_Column_List_Flow">
+    daystr, uvs, new_uvs
+  </sql>
+  <sql id="Base_Column_List_Ip">
+    ip, vis_num
+  </sql>
+  <sql id="Base_Column_List_Avg_Pvs">
+    daystr, avg_pvs
+  </sql>
+  <select id="selectByExample" parameterType="com.gec.pojo.PvsExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from pvs
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+
+  <select id="selectByFlow" parameterType="com.gec.pojo.Flow" resultMap="BaseResultFlowMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List_Flow" />
+    from flow
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+
+  <select id="selectIpList" parameterType="com.gec.pojo.Ip" resultMap="BaseResultIpMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List_Ip" />
+    from uservisit
+  </select>
+
+  <delete id="deleteByExample" parameterType="com.gec.pojo.PvsExample">
+    delete from pvs
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.gec.pojo.Pvs">
+    insert into pvs (daystr, pvs)
+    values (#{daystr,jdbcType=VARCHAR}, #{pvs,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.gec.pojo.Pvs">
+    insert into pvs
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="daystr != null">
+        daystr,
+      </if>
+      <if test="pvs != null">
+        pvs,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="daystr != null">
+        #{daystr,jdbcType=VARCHAR},
+      </if>
+      <if test="pvs != null">
+        #{pvs,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.gec.pojo.PvsExample" resultType="java.lang.Long">
+    select count(*) from pvs
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+
+  <select id="selectAvgByExample" parameterType="com.gec.pojo.PvsExample" resultMap="BaseResultAvgPvsMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List_Avg_Pvs" />
+    from avg_pvs
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+
+  <update id="updateByExampleSelective" parameterType="map">
+    update pvs
+    <set>
+      <if test="record.daystr != null">
+        daystr = #{record.daystr,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pvs != null">
+        pvs = #{record.pvs,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update pvs
+    set daystr = #{record.daystr,jdbcType=VARCHAR},
+      pvs = #{record.pvs,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>
